@@ -1,28 +1,61 @@
-This folder structure should be suitable for starting a project that uses a database:
+1. How many users are there?
 
-* Clone the repo
-* `rake generate:migration <Name>` to create a migration
-* `rake db:migrate` to run it
-* Create models
-* ... ?
-* Profit
+	My answer: User.first -> User.all -> 46
+  Second answer: User.all.count -> 49
 
-You may need to fiddle around with remotes assuming that you don't want to push to this one (which you probably don't).
 
-## Rundown
 
-```
-.
-├── Gemfile             # Details which gems are required by the project
-├── README.md           # This file
-├── Rakefile            # Defines `rake generate:migration` and `db:migrate`
-├── config
-│   └── database.yml    # Defines the database config (e.g. name of file)
-├── console.rb          # `ruby console.rb` starts `pry` with models loaded
-├── db
-│   ├── dev.sqlite3     # Default location of the database file
-│   ├── migrate         # Folder containing generated migrations
-│   └── setup.rb        # `require`ing this file sets up the db connection
-└── lib                 # Your ruby code (models, etc.) should go here
-    └── all.rb          # Require this file to auto-require _all_ `.rb` files in `lib`
-```
+2. What are the 5 most expensive items?
+   
+   Item.order(price: :desc).limit(5).pluck(:name)
+
+   1. "Gorgeous Plastic Pants"
+   2. "Intelligent Cotton Computer"
+   3. "Small Concrete Pants"
+   4. "Gorgeous Granite Pants"
+   5. "Rustic Concrete Pants"
+
+
+3. What's the cheapest electronics item?
+
+   Item.order(price: :asc).where(category: :"Electronics").limit(1)
+
+   1. "Rustic Wooden Table"
+
+
+4. Who lives at "489 Fritsch Island"? Do they have another address?
+   Address.where(street: "489 Frisch Island")
+   User.where(id: 35)
+   Address.where(user_id: 35)
+
+
+5. Correct Tevin Mitchell's New York zip code to 10108.
+   User.where(first_name: "Tevin")
+   Address.where(user id: 25, State: "New York").limit(1).update_all(zip: 10108)
+
+
+6. How much would it cost to buy one of each piece of jewelery?
+   Item.where("catagory LIKE ?", "%Jewelery%").sum(:price).to_s
+
+
+7. How many total items did we sell?
+
+    Order.sum(:quantity)
+
+    1. 817
+
+    Order.pluck(:quantity).reduce(:+)
+
+
+8. How much was spent on health?
+
+   Item.where("category LIKE ?", "Health")
+
+   Order.where(item_id: 1).sum(:quantity) * Item.find(1).price
+
+   Item.where("category LIKE ?", %Health%).each do |i|
+   price += i.price
+   price.to_fj
+
+
+9. Simulate buying an item by inserting a User for yourself and an Order for that User (do not include this in the figures above).# DataAdvance-
